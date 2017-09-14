@@ -1,16 +1,35 @@
 <?php
-if ($_FILES["image"]["size"] > 1000) {
-    echo "Sorry, your file is too large.";
-    $uploadOk = 0;
-}
+   if(isset($_FILES['image'])){
+   	  $max_size = 1024;
+      $errors= array();
+      $file_name = $_FILES['image']['name'];
+      $file_size =$_FILES['image']['size'];
+      $err="";
+     
+   
+      
+      $expensions= array("jpeg","jpg","png");
+       $file_ext=explode('.',$_FILES['image']['name'])[1];
+      
+      if(in_array($file_ext,$expensions)=== false){
+         $errors[]="extension not allowed, please choose a JPEG or PNG file.";
+      }
+      
+      if($file_size > 1024){
+         $errors[]='File size must be exactely 1 MB';
+      }
+      
+      if(empty($errors)==true){
+         move_uploaded_file($file_tmp,"uploads/".$file_name);
+         echo "Success";
+      }else{
+         print_r($errors);
+      }
+      else {
+      	$err= "File is larger" . $max_size "B";
 
-if($image != "jpg" && $image != "png" && 
- $image != "gif" ) {
-    echo "Sorry, only JPG, PNG & GIF files are allowed.";
-    $uploadOk = 0;
-}
-
-
+      }
+   }
 
 
 
@@ -41,6 +60,11 @@ if($image != "jpg" && $image != "png" &&
                 <input type="file" name="image" id="image">
                 <input type="submit" value="Įkelti" name="submit">
             </form>
+            <?php
+            if ($err){
+            	echo "Error";
+            }
+            ?>
 	          
 		
 	        </div>
